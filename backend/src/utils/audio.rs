@@ -43,7 +43,7 @@ pub fn load_wav_as_f32(file_path: &str) -> Vec<f32> {
 }
 
 pub fn transcribe_wav(file_path: &str) -> String {
-    let ctx = WhisperContext::new_with_params("llms/ggml-small.bin", WhisperContextParameters::default())
+    let ctx = WhisperContext::new_with_params("llms/ggml-tiny.bin", WhisperContextParameters::default())
     .expect("failed to load model");
 
     let mut state = ctx.create_state().expect("failed to create state");
