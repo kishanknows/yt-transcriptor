@@ -5,6 +5,7 @@ FROM rust:latest AS builder
 RUN apt-get update && apt-get install -y \
     clang \
     libclang-dev \
+    llvm-dev \
     pkg-config \
     libssl-dev \
     cmake \
@@ -13,7 +14,11 @@ RUN apt-get update && apt-get install -y \
     libc6-dev \
     libstdc++-12-dev \
     libatomic1 \
+    curl \
     && rm -rf /var/lib/apt/lists/*
+
+# set LIBCLANG_PATH so bindgen can find libclang
+ENV LIBCLANG_PATH=/usr/lib/llvm-14/lib
 
 RUN rustup component add rustfmt
 
@@ -34,7 +39,7 @@ RUN find /usr/local/cargo/registry/src -type f -path "*/whisper.cpp/CMakeLists.t
 RUN cargo build --release
 
 # running stage
-FROM ubuntu:24.04
+FROM debian:bookworm-slim
 RUN apt-get update && apt-get install -y \
     libssl3 \
     libstdc++6 \
