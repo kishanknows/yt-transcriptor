@@ -10,7 +10,7 @@ use routes::youtube_routes;
 #[tokio::main]
 async fn main() {
     let app = Router::new()
-                .route("/", get(|| async { "Hello, Rust Backend!!!" }))
+                .route("/", get(|| async { "Powered by Rust." }))
                 .merge(youtube_routes());
 
     let port = std::env::var("PORT").unwrap_or("8080".into());
