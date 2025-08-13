@@ -4,7 +4,6 @@ mod models;
 mod utils;
 
 use axum::{routing::get, Router};
-use std::net::SocketAddr;
 use tokio::net::TcpListener;
 use routes::youtube_routes;
 
@@ -14,7 +13,9 @@ async fn main() {
                 .route("/", get(|| async { "Hello, Rust Backend!!!" }))
                 .merge(youtube_routes());
 
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    let port = std::env::var("PORT").unwrap_or("8080".into());
+    let addr = format!("0.0.0.0:{}", port);
+
     println!("Listening on {}", addr);
 
     let listener = TcpListener::bind(addr).await.unwrap();
