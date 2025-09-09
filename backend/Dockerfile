@@ -39,7 +39,7 @@ RUN find /usr/local/cargo/registry/src -type f -path "*/whisper.cpp/CMakeLists.t
 RUN cargo build --release
 
 # running stage
-FROM debian:bookworm-slim
+FROM ubuntu:24.04
 RUN apt-get update && apt-get install -y \
     libssl3 \
     libstdc++6 \
