@@ -12,10 +12,19 @@ pub async fn transcribe(Json(payload): Json<TranscribeRequest>) -> impl IntoResp
             for (i, id) in ids.iter().enumerate() {
                 
                 println!("Processing: {}, {} of {}", id, i+1, ids.len());
-                download_audio(id);
-                let file_path = convert_to_wav(id);
-                let text = transcribe_wav(&file_path);
-                transcriptions.push(text);
+                match download_audio(id){
+                    Ok(status) => {
+                        if status.success() {
+                            let file_path = convert_to_wav(id);
+                            let text = transcribe_wav(&file_path);
+                            transcriptions.push(text);
+                        }
+                    },
+                    Err(e) => {
+                        eprintln!("Failed to process {}", e);
+                    }
+                }
+                
             }
         }
         Err(e) => eprintln!("Error: {}", e),

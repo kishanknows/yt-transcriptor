@@ -1,25 +1,24 @@
-use std::process::Command;
+use std::process::{Command, ExitStatus};
 use std::path::Path;
 use whisper_rs::{FullParams, SamplingStrategy, WhisperContext, WhisperContextParameters};
 
-pub fn download_audio(youtube_id: &str){
-    let output = format!("downloads/{}.opus", youtube_id);
+pub fn download_audio(youtube_id: &str) -> Result<ExitStatus, std::io::Error> {
+    let output = format!("downloads/{}.mp3", youtube_id);
     let url = format!("https://www.youtube.com/watch?v={}", youtube_id);
     Command::new("yt-dlp")
         .args([
             "--no-playlist",
             "-x",
-            "--audio-format", "opus",
+            "--audio-format", "mp3",
             "--audio-quality", "9",
             "-o", &output,
             &url
         ])
         .status()
-        .expect("failed to run yt-dlp");
 }
 
 pub fn convert_to_wav(youtube_id: &str) -> String {
-    let input = format!("downloads/{}.opus", youtube_id);
+    let input = format!("downloads/{}.mp3", youtube_id);
     let output = format!("downloads/{}.wav", youtube_id);
     Command::new("ffmpeg")
         .args([
